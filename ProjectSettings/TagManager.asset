@@ -3,6 +3,14 @@
 --- !u!78 &1
 TagManager:
   tags:
+  - Boundary
+  - Projectile
+  - menu
+  - leftedge
+  - rightedge
+  - texteroid
+  - 
+  - Enemy
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
