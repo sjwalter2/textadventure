@@ -13,6 +13,9 @@ public class SnakeGame : MonoBehaviour
 	public int gameScore = 0;
 	public int gameLives = 3;
 	public int scoreMultiplier = 100;
+	// script that grabs words inputted on main menu
+	public WordMaker myScript;
+
 	// ---------------------------------------------------------------------------------------------------
 	// constructor field: Instance
 	// ---------------------------------------------------------------------------------------------------
@@ -87,7 +90,7 @@ public class SnakeGame : MonoBehaviour
 	// ---------------------------------------------------------------------------------------------------
 	public void UpdateWord()
 	{
-		spellingWord = "FOOD";
+		spellingWord = myScript.nextWord();
 		wordToSpell.text = spellingWord;
 		Food.Instance.UpdateFood(spellingWord);
 	}
@@ -100,6 +103,8 @@ public class SnakeGame : MonoBehaviour
 	public void Initialize()
 	{
 		print("SnakeGame initialized");
+		// initialize word generator
+		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
 		// initialize transform information
 		transform.position = Vector3.zero;
 		transform.rotation = Quaternion.identity;
