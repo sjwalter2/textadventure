@@ -90,7 +90,7 @@ public class SnakeGame : MonoBehaviour
 	// ---------------------------------------------------------------------------------------------------
 	public void UpdateWord()
 	{
-		spellingWord = myScript.nextWord();
+		spellingWord = myScript.nextWord().getWord ();
 		wordToSpell.text = spellingWord;
 		Food.Instance.UpdateFood(spellingWord);
 	}
