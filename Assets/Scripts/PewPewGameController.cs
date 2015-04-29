@@ -20,8 +20,12 @@ public class PewPewGameController : MonoBehaviour {
 	private bool gameover;
 	private bool restart;
 	private bool pausegeneration;
+
+	public WordMaker myScript;
+
 	// Use this for initialization
 	void Start () {
+		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
 		enemys = enemy.Split();
 		StartCoroutine (SpawnWaves ());
 		gameover = false;
@@ -84,7 +88,7 @@ public class PewPewGameController : MonoBehaviour {
 						Quaternion spawnRotation = Quaternion.identity;
 						GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
 						Debug.Log (thingy.GetType ());
-						thingy.GetComponent<TextMesh> ().text = enemys [currentWord];
+						thingy.GetComponent<TextMesh> ().text = myScript.nextWord();
 						
 						var a = thingy.collider.bounds;
 						var b = thingy.renderer.bounds;
