@@ -12,6 +12,7 @@ TagManager:
   - 
   - Enemy
   - score
+  - bogey
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

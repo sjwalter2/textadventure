@@ -14,7 +14,7 @@ public class PewPewScoreScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Text t = GetComponent<Text> ();
-		Debug.Log ("yarp" + t.text);
+		//Debug.Log ("yarp" + t.text);
 		t.text = "score: " + score;
 	}
 }
