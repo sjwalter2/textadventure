@@ -66,7 +66,7 @@
      <Compile Include="Assets\Scripts\PewPewPlayerController.cs" />
      <Compile Include="Assets\Scripts\PewPewPlayerControllerNew.cs" />
      <Compile Include="Assets\Scripts\PewPewRandomRotator.cs" />
-     <Compile Include="Assets\Scripts\restart.cs" />
+     <Compile Include="Assets\Scripts\PewPewScoreScript.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.2/UnityEngine.UI.dll</HintPath>
  </Reference>

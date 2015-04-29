@@ -5,12 +5,14 @@ public class PewPewBoltMover : MonoBehaviour {
 	public float speed;
 	public string dxn;
 	private Vector3 velocity;
+	public bool paused;
 
 	void Awake () {
 		dxn = "up";
 	}
 	// Use this for initialization
 	void Start () {
+		paused = false;
 		//dxn = "up";
 		velocity = transform.forward * speed;
 		rigidbody.velocity = velocity;
@@ -25,10 +27,14 @@ public class PewPewBoltMover : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (dxn == "down") {
-			rigidbody.velocity = -velocity;
-		} else if (dxn == "up") {
-			rigidbody.velocity = velocity;
+		if (paused) {
+			rigidbody.velocity = Vector3.zero;
+		} else {
+			if (dxn == "down") {
+				rigidbody.velocity = -velocity;
+			} else if (dxn == "up") {
+				rigidbody.velocity = velocity;
+			}
 		}
 	}
 

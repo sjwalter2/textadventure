@@ -27,6 +27,9 @@ public class PewPewDestroyByContact : MonoBehaviour {
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (other.gameObject);
 			Destroy (gameObject);
+			GameObject g = GameObject.FindGameObjectsWithTag ("score")[0];
+			PewPewScoreScript s = g.GetComponent<PewPewScoreScript>();
+			s.score = s.score + 10;
 		}
 	}
 }

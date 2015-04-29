@@ -19,6 +19,7 @@ public class PewPewGameController : MonoBehaviour {
 	private string[] enemys;
 	private bool gameover;
 	private bool restart;
+	private bool pausegeneration;
 	// Use this for initialization
 	void Start () {
 		enemys = enemy.Split();
@@ -28,6 +29,7 @@ public class PewPewGameController : MonoBehaviour {
 
 		menuvar = GameObject.FindGameObjectsWithTag ("menu")[0];
 		menuon = false;
+		pausegeneration = false;
 	}
 	
 	// Update is called once per frame
@@ -47,9 +49,26 @@ public class PewPewGameController : MonoBehaviour {
 	void OnGUI () {
 		Event e = Event.current;
 		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape) {
+			pause();
 			menuon = !menuon;
 			Debug.Log ("menu event");
 		}
+	}
+
+	void pause() {
+		GameObject[] gg = GameObject.FindGameObjectsWithTag ("texteroid");
+		foreach (GameObject g in gg) {
+			PewPewBoltMover b = g.GetComponent<PewPewBoltMover>();
+			b.paused = !b.paused;
+		}
+
+		GameObject[] bolt = GameObject.FindGameObjectsWithTag ("Projectile");
+		foreach (GameObject b in bolt) {
+			PewPewBoltMover bm = b.GetComponent <PewPewBoltMover>();
+			bm.paused = !bm.paused;
+		}
+		pausegeneration = !pausegeneration;
+
 	}
 
 	IEnumerator SpawnWaves() {
@@ -57,56 +76,42 @@ public class PewPewGameController : MonoBehaviour {
 		int currentWord = 0;
 
 		while (currentWord < enemys.GetLength (0) && !gameover) {
-			for (int i = 0; i<hazardCount; i++) {
-				if(currentWord < enemys.GetLength(0)){
-					Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-					Quaternion spawnRotation = Quaternion.identity;
-					GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
-					Debug.Log (thingy.GetType());
-					thingy.GetComponent<TextMesh>().text = enemys[currentWord];
+			int i = 0;
+			while (i < hazardCount) {
+				if(!pausegeneration) {
+					if (currentWord < enemys.GetLength (0)) {
+						Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+						Quaternion spawnRotation = Quaternion.identity;
+						GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
+						Debug.Log (thingy.GetType ());
+						thingy.GetComponent<TextMesh> ().text = enemys [currentWord];
+						
+						var a = thingy.collider.bounds;
+						var b = thingy.renderer.bounds;
+						thingy.GetComponent<BoxCollider> ().size = b.size;
+						thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
 
-					var a = thingy.collider.bounds;
-					var b = thingy.renderer.bounds;
-					thingy.GetComponent<BoxCollider>().size = b.size;
-					thingy.GetComponent<BoxCollider>().center = Vector3.zero;
+						PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
+						bt.dxn = "down";
+					}
+					currentWord++;
+					i++;
+					
+					if (gameover) {
+						//GameObject.FindGameObjectsWithTag ("menu") [0].SetActive (true);
+						menuon = true;
+						break;
+					}
+				} else {
 
-					//doesn't work this is bullshit
-					//thingy.GetComponent<BoltMover>().dxn = "down";
-					//Debug.Log (thingy.GetComponent<BoltMover>().dxn);
-
-					PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover>();
-					bt.dxn = "down";
-					//thingy.transform.SetParent (this.transform);
-					Debug.Log (thingy.GetComponent<PewPewBoltMover>().dxn);
-					Debug.Log (bt.GetType());
-					//bt.GetComponent (
-
-					//bt.dxn = "down";
-					//thingy.GetComponent<BoltMover>() = bt;
-					//BoltMover bt = thingy.GetComponent<BoltMover>();
-					//	swopdxn();
-					//Debug.Log (thingy.GetComponent<BoltMover>().dxn);
-
-					/*
-					GameObject[] gg = GameObject.FindGameObjectsWithTag ("texteroid");
-					foreach (GameObject g in gg) {
-						BoltMover bb = g.GetComponent<BoltMover>();
-						bb.dxn = "down";
-					}*/
-
-				}
-				currentWord++;
-
-				if (gameover) {
-					GameObject.FindGameObjectsWithTag ("menu")[0].SetActive (true);
-					break;
 				}
 				yield return new WaitForSeconds (spawnWait);
 			}
 			yield return new WaitForSeconds(waveWait);
 		}
 		Debug.Log ("You Win or Something");
-		GameObject.FindGameObjectsWithTag ("menu") [0].SetActive (true);
+		//GameObject.FindGameObjectWithTag ("menu").SetActive (true);
+		menuon = true;
 	}
 
 	public void endgame() {
