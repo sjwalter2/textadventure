@@ -20,6 +20,7 @@ public class PewPewGameController : MonoBehaviour {
 	private bool gameover;
 	private bool restart;
 	private bool pausegeneration;
+	public float texteroidSpeed;
 
 	public WordMaker myScript;
 
@@ -31,7 +32,7 @@ public class PewPewGameController : MonoBehaviour {
 		gameover = false;
 		restart = false;
 
-		menuvar = GameObject.FindGameObjectsWithTag ("menu")[0];
+		menuvar = GameObject.FindGameObjectWithTag ("menu");
 		menuon = false;
 		pausegeneration = false;
 	}
@@ -62,8 +63,14 @@ public class PewPewGameController : MonoBehaviour {
 	void pause() {
 		GameObject[] gg = GameObject.FindGameObjectsWithTag ("texteroid");
 		foreach (GameObject g in gg) {
-			PewPewBoltMover b = g.GetComponent<PewPewBoltMover>();
+			PewPewTexteroidMover b = g.GetComponent<PewPewTexteroidMover>();
 			b.paused = !b.paused;
+		}
+
+		GameObject[] gb = GameObject.FindGameObjectsWithTag ("bogey");
+		foreach (GameObject b in gb) {
+			PewPewTexteroidMover k = b.GetComponent<PewPewTexteroidMover>();
+			k.paused = !k.paused;
 		}
 
 		GameObject[] bolt = GameObject.FindGameObjectsWithTag ("Projectile");
@@ -78,7 +85,7 @@ public class PewPewGameController : MonoBehaviour {
 	IEnumerator SpawnWaves() {
 		yield return new WaitForSeconds(startWait);
 		int currentWord = 0;
-
+		/*
 		while (myScript.hasNextWord () && !gameover) {
 			int i = 0;
 			while (i < hazardCount && !gameover) {
@@ -98,6 +105,26 @@ public class PewPewGameController : MonoBehaviour {
 				yield return new WaitForSeconds (spawnWait);
 			}
 			yield return new WaitForSeconds(waveWait);
+		}*/
+
+		while (myScript.hasNextWord () && !gameover) {
+			if(pausegeneration) {
+				yield return new WaitForSeconds(spawnWait);
+			} else {
+				string word = myScript.nextWord ();
+				int t = Random.Range(0,2);
+				if (t == 0){
+					spawnWordWithDupes (word);
+				} else {
+					spawnWord (word);
+				}
+
+				if (word[word.Length-1] == ',' || word[word.Length-1] == '.') {
+					yield return new WaitForSeconds(waveWait);
+				} else {
+					yield return new WaitForSeconds(spawnWait);
+				}
+			}
 		}
 		Debug.Log ("You Win or Something");
 		//GameObject.FindGameObjectWithTag ("menu").SetActive (true);
@@ -116,7 +143,7 @@ public class PewPewGameController : MonoBehaviour {
 		thingy.GetComponent<BoxCollider> ().size = b.size;
 		thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
 		
-		PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
+		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
 	}
 
@@ -133,18 +160,19 @@ public class PewPewGameController : MonoBehaviour {
 		thingy.GetComponent<BoxCollider> ().size = b.size;
 		thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
 
-		PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
+		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
 
 		Vector3 rDupePosn = new Vector3 (xpos + b.extents.x + 1, spawnValues.y, spawnValues.z - 2);
 		Quaternion rDupeRotn = Quaternion.identity;
 		GameObject rDupe = (GameObject)Instantiate (hazard, rDupePosn, rDupeRotn);
+		rDupe.tag = "bogey";
 		rDupe.GetComponent<TextMesh> ().text = getDupe ();
 		rDupe.GetComponent<BoxCollider> ().size = rDupe.renderer.bounds.size;
 		rDupe.GetComponent<BoxCollider> ().center = Vector3.zero;
 		rDupe.transform.position = new Vector3 (rDupe.transform.position.x + rDupe.renderer.bounds.extents.x, rDupe.transform.position.y, rDupe.transform.position.z + 2);
 		
-		PewPewBoltMover rDupemv = rDupe.GetComponent<PewPewBoltMover> ();
+		PewPewTexteroidMover rDupemv = rDupe.GetComponent<PewPewTexteroidMover> ();
 		rDupemv.dxn = "down";
 	}
 

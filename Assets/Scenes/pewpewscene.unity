@@ -2447,6 +2447,7 @@ MonoBehaviour:
     decree, where Alph, the sacred river ran through caverns measureless to man down
     to a sunless sea
   p: {fileID: 1365633989}
+  texteroidSpeed: 2.5
   myScript: {fileID: 0}
 --- !u!114 &1197758871
 MonoBehaviour:
@@ -2456,7 +2457,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1197758868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 428b07559480fdb45917d66096b72cd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 03376cb971bad5a4b979ae58f8150378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1288957788
@@ -2691,7 +2692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383d93fd58c3dcb4fb1498730ddd94a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 150
+  speed: 110
   xMin: -6
   xMax: 6
   zMin: -1
