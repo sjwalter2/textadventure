@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WordMaker : MonoBehaviour {
 	public Text MachineText;
-	string[] words;
+	WordPower[] otherwords;
+
 	int index;
 	int end;
 
@@ -13,15 +15,21 @@ public class WordMaker : MonoBehaviour {
 	}
 
 	public void read(){
-		words = MachineText.text.Split (' ');
+		string[] words = MachineText.text.Split (' ');
+		otherwords = new WordPower[words.Length];
+		for (int i = 0; i < words.Length; i++) {
+			WordPower myWord = (WordPower) Instantiate(GetComponentInChildren<WordPower>());
+			myWord.setWord(words[i]);
+			otherwords[i] = myWord;
+		}
 		index = 0;
-		end = words.Length;
 	}
+
 	public string nextWord(){
 		if (index == end) {
 			//do something
 		}
 		index = index + 1;
-		return words[index - 1];
+		return otherwords[index - 1].getWord ();
 	}
 }
