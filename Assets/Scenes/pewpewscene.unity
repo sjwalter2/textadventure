@@ -2447,6 +2447,7 @@ MonoBehaviour:
     decree, where Alph, the sacred river ran through caverns measureless to man down
     to a sunless sea
   p: {fileID: 1365633989}
+  myScript: {fileID: 0}
 --- !u!114 &1197758871
 MonoBehaviour:
   m_ObjectHideFlags: 0

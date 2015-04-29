@@ -19,9 +19,18 @@ public class WordMaker : MonoBehaviour {
 	}
 	public string nextWord(){
 		if (index == end) {
-			//do something
+			return "3rr0r";
+		} else {
+			index = index + 1;
+			return words [index - 1];
 		}
-		index = index + 1;
-		return words[index - 1];
+	}
+
+	public bool hasNextWord(){
+		if (index >= end) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }

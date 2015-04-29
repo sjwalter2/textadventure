@@ -56,6 +56,11 @@
      <Compile Include="Assets\Done\Done_Scripts\Done_PlayerController.cs" />
      <Compile Include="Assets\Done\Done_Scripts\Done_RandomRotator.cs" />
      <Compile Include="Assets\Done\Done_Scripts\Done_WeaponController.cs" />
+     <Compile Include="Assets\Scripts\BuildScripts\Food.cs" />
+     <Compile Include="Assets\Scripts\BuildScripts\Snake.cs" />
+     <Compile Include="Assets\Scripts\BuildScripts\SnakeGame.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\InputFieldToText.cs" />
      <Compile Include="Assets\Scripts\PewPewBoltMover.cs" />
      <Compile Include="Assets\Scripts\PewPewCanvasMenu.cs" />
      <Compile Include="Assets\Scripts\PewPewDestroyByBoundary.cs" />
@@ -67,6 +72,13 @@
      <Compile Include="Assets\Scripts\PewPewPlayerControllerNew.cs" />
      <Compile Include="Assets\Scripts\PewPewRandomRotator.cs" />
      <Compile Include="Assets\Scripts\PewPewScoreScript.cs" />
+     <Compile Include="Assets\Scripts\Utils\GUIHelper.cs" />
+     <Compile Include="Assets\Scripts\Utils\InputHelper.cs" />
+     <Compile Include="Assets\Scripts\Utils\ScreenHelper.cs" />
+     <Compile Include="Assets\Scripts\Utils\TextureHelper.cs" />
+     <Compile Include="Assets\Scripts\WordMaker.cs" />
+     <Compile Include="Assets\Scripts\changeLevel.cs" />
+     <Compile Include="Assets\Scripts\newWord.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.2/UnityEngine.UI.dll</HintPath>
  </Reference>

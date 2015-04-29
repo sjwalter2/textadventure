@@ -79,36 +79,22 @@ public class PewPewGameController : MonoBehaviour {
 		yield return new WaitForSeconds(startWait);
 		int currentWord = 0;
 
-		while (currentWord < enemys.GetLength (0) && !gameover) {
+		while (myScript.hasNextWord () && !gameover) {
 			int i = 0;
-			while (i < hazardCount) {
+			while (i < hazardCount && !gameover) {
 				if(!pausegeneration) {
-					if (currentWord < enemys.GetLength (0)) {
-						Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-						Quaternion spawnRotation = Quaternion.identity;
-						GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
-						Debug.Log (thingy.GetType ());
-						thingy.GetComponent<TextMesh> ().text = myScript.nextWord();
-						
-						var a = thingy.collider.bounds;
-						var b = thingy.renderer.bounds;
-						thingy.GetComponent<BoxCollider> ().size = b.size;
-						thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
-
-						PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
-						bt.dxn = "down";
+					if (myScript.hasNextWord ()) {
+						string word = myScript.nextWord ();
+						int t = Random.Range(0,2);
+						if (t == 0){
+							spawnWordWithDupes (word);
+						} else {
+							spawnWord (word);
+						}
 					}
-					currentWord++;
+					//currentWord++;
 					i++;
-					
-					if (gameover) {
-						//GameObject.FindGameObjectsWithTag ("menu") [0].SetActive (true);
-						menuon = true;
-						break;
-					}
-				} else {
-
-				}
+				} 
 				yield return new WaitForSeconds (spawnWait);
 			}
 			yield return new WaitForSeconds(waveWait);
@@ -116,6 +102,54 @@ public class PewPewGameController : MonoBehaviour {
 		Debug.Log ("You Win or Something");
 		//GameObject.FindGameObjectWithTag ("menu").SetActive (true);
 		menuon = true;
+	}
+
+	public void spawnWord(string word) {
+		Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
+		Debug.Log (thingy.GetType ());
+		thingy.GetComponent<TextMesh> ().text = word;
+		
+		var a = thingy.collider.bounds;
+		var b = thingy.renderer.bounds;
+		thingy.GetComponent<BoxCollider> ().size = b.size;
+		thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
+		
+		PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
+		bt.dxn = "down";
+	}
+
+	public void spawnWordWithDupes(string word) {
+		float xpos = Random.Range (-spawnValues.x, spawnValues.x);
+		Vector3 spawnPosition = new Vector3 (xpos, spawnValues.y, spawnValues.z);
+		Quaternion spawnRotation = Quaternion.identity;
+		GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
+		Debug.Log (thingy.GetType ());
+		thingy.GetComponent<TextMesh> ().text = word;
+		
+		var a = thingy.collider.bounds;
+		var b = thingy.renderer.bounds;
+		thingy.GetComponent<BoxCollider> ().size = b.size;
+		thingy.GetComponent<BoxCollider> ().center = Vector3.zero;
+
+		PewPewBoltMover bt = thingy.GetComponent<PewPewBoltMover> ();
+		bt.dxn = "down";
+
+		Vector3 rDupePosn = new Vector3 (xpos + b.extents.x + 1, spawnValues.y, spawnValues.z - 2);
+		Quaternion rDupeRotn = Quaternion.identity;
+		GameObject rDupe = (GameObject)Instantiate (hazard, rDupePosn, rDupeRotn);
+		rDupe.GetComponent<TextMesh> ().text = getDupe ();
+		rDupe.GetComponent<BoxCollider> ().size = rDupe.renderer.bounds.size;
+		rDupe.GetComponent<BoxCollider> ().center = Vector3.zero;
+		rDupe.transform.position = new Vector3 (rDupe.transform.position.x + rDupe.renderer.bounds.extents.x, rDupe.transform.position.y, rDupe.transform.position.z + 2);
+		
+		PewPewBoltMover rDupemv = rDupe.GetComponent<PewPewBoltMover> ();
+		rDupemv.dxn = "down";
+	}
+
+	public string getDupe() {
+		return "smang";
 	}
 
 	public void endgame() {
