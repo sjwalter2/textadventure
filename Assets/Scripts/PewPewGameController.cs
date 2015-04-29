@@ -111,7 +111,7 @@ public class PewPewGameController : MonoBehaviour {
 			if(pausegeneration) {
 				yield return new WaitForSeconds(spawnWait);
 			} else {
-				string word = myScript.nextWord ();
+				string word = myScript.nextWord ().getWord ();
 				int t = Random.Range(0,2);
 				if (t == 0){
 					spawnWordWithDupes (word);
