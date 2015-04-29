@@ -1,16 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WordPower : MonoBehaviour {
+public class WordPower {
 
-	public GameObject myWord;
 	string word;
 	string type;
-
-	// Use this for initialization
-	void Start () {
-		DontDestroyOnLoad (myWord);
-	}
 	
 	public void setWord(string text){
 		word = text;

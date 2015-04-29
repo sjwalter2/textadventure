@@ -18,7 +18,7 @@ public class WordMaker : MonoBehaviour {
 		string[] words = MachineText.text.Split (' ');
 		otherwords = new WordPower[words.Length];
 		for (int i = 0; i < words.Length; i++) {
-			WordPower myWord = (WordPower) Instantiate(GetComponentInChildren<WordPower>());
+			WordPower myWord = new WordPower();
 			myWord.setWord(words[i]);
 			otherwords[i] = myWord;
 		}
