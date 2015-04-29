@@ -23,6 +23,7 @@ public class WordMaker : MonoBehaviour {
 			otherwords[i] = myWord;
 		}
 		index = 0;
+		end = otherwords.Length;
 	}
 
 	public string nextWord(){
@@ -30,10 +31,8 @@ public class WordMaker : MonoBehaviour {
 			return "3rr0r";
 		} else {
 			index = index + 1;
-			return words [index - 1];
+			return otherwords [index - 1].getWord();
 		}
-		return words[index - 1];
-		return otherwords[index - 1].getWord ();
 	}
 
 	public bool hasNextWord(){
