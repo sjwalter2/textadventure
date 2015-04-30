@@ -6,12 +6,14 @@ using System.Collections.Generic;
 public class WordMaker : MonoBehaviour {
 	public Text MachineText;
 	WordPower[] otherwords;
+	reader Reader;
 
 	int index;
 	int end;
 
 	void Start(){
 		DontDestroyOnLoad (MachineText);
+		Reader = new reader ();
 	}
 
 	public void read(){
@@ -26,13 +28,20 @@ public class WordMaker : MonoBehaviour {
 		end = otherwords.Length;
 	}
 
-	public string nextWord(){
+	public WordPower nextWord(){
 		if (index == end) {
-			return "3rr0r";
+			WordPower error = new WordPower();
+			error.setWord ("Error");
+			return error;
 		} else {
+			otherwords[index].setType (Reader.getType(otherwords[index].getWord ()));
 			index = index + 1;
-			return otherwords [index - 1].getWord();
+			return otherwords[index - 1];
 		}
+	}
+
+	public void restart(){
+		index = 0;
 	}
 
 	public bool hasNextWord(){

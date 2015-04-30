@@ -12,7 +12,7 @@ public class newWord : MonoBehaviour {
 	}
 	
 	public void NextWord(){
-		myText.text = myScript.nextWord ();
+		myText.text = myScript.nextWord ().getWord();
 	}
 
 }

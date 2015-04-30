@@ -8,10 +8,14 @@ public class WordPower {
 	
 	public void setWord(string text){
 		word = text;
-		type = "normal"; //at this point, search through list of words to set actual type
 	}
+
 	public string getWord(){
 		return word;
+	}
+
+	public void setType(string s){
+		type = s;
 	}
 
 	public string getType(){
