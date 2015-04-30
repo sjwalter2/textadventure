@@ -31,7 +31,7 @@ public class GUIHelper : MonoBehaviour
 	public static void CreateGUITexture(Rect coordinates, Color colTexture, float layer)
 	{
 		// over load to add a name to the gameObject created
-		CreateGUITexture(coordinates, colTexture, "GUITextureOBject", layer);
+		CreateGUITexture(coordinates, colTexture, "GUITextureObject", layer);
 	}
 	public static void CreateGUITexture(Rect coordinates, Color colTexture, string name, float layer)
 	{
@@ -69,6 +69,22 @@ public class GUIHelper : MonoBehaviour
 		Texture2D guiTexture = TextureHelper.Create1x1Texture(colTexture);
 		// set some GUITexture properties
 		guiDisplayTexture.texture = guiTexture;
+		guiDisplayTexture.pixelInset = coordinates;
+		// return our GUITexture
+		return guiDisplayTexture;
+	}
+	public static GUITexture CreateGetGUITexture(Rect coordinates, Texture2D texture, string name, float layer)
+	{
+		// we need a new game object to hold the component
+		GameObject guiTextureObject = new GameObject(name);
+		// set some gameObject properties
+		guiTextureObject.transform.position = new Vector3(0, 0, layer);
+		guiTextureObject.transform.rotation = Quaternion.identity;
+		guiTextureObject.transform.localScale = new Vector3(0.01f, 0.01f, 1.0f);
+		// add our GUITexture Component
+		GUITexture guiDisplayTexture = guiTextureObject.AddComponent<GUITexture>();
+		// set some GUITexture properties
+		guiDisplayTexture.texture = texture;
 		guiDisplayTexture.pixelInset = coordinates;
 		// return our GUITexture
 		return guiDisplayTexture;

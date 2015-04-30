@@ -194,7 +194,7 @@ public class PewPewGameController : MonoBehaviour {
 	}
 
 	public string getDupe() {
-		return "smang";
+		return myScript.getFakeWord ();
 	}
 
 	public void endgame() {

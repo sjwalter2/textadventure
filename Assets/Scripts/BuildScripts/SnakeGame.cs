@@ -136,8 +136,14 @@ public class SnakeGame : MonoBehaviour
 		// setup our snake game border background
 		GUIHelper.CreateGUITexture(new Rect(10,40,1015,660), Color.grey, "ScreenBorder", 0);
 		// setup our snake game playing field
-		GUIHelper.CreateGUITexture(new Rect(20, 50, 1000, 600),
-		                           Color.black, "ScreenField", 1);
+		GUIHelper.CreateGetGUITexture(new Rect(Snake.initXPos[0], Snake.initYPos[0]-40,
+	                            (Snake.initXPos[1] - Snake.initXPos[0])*Snake.initXPos.GetLength(0),
+		                        (Snake.initYPos[1] - Snake.initYPos[0])*Snake.initYPos.GetLength(0)+10),
+		                TextureHelper.LoadBackgroundTexture(), "ScreenField", 1);
+//		GUIHelper.CreateGUITexture(new Rect( Snake.initXPos[0], Snake.initYPos[0],
+//		                                    (Snake.initXPos[1] - Snake.initXPos[0])*Snake.initXPos.GetLength(0),
+//		                                    (Snake.initYPos[1] - Snake.initYPos[0])*Snake.initYPos.GetLength(0))
+//		                           , Color.black, "ScreenField", 1);
 		// create and initialize our score GUIText
 		displayScore = GUIHelper.CreateGetGUIText(new Vector2(10,700), "Game Score", "Score", 1);
 		// update our integer score and display score
