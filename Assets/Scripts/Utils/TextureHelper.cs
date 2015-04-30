@@ -105,6 +105,84 @@ public class TextureHelper : MonoBehaviour
 		case 'Z':
 			texture = Resources.Load("Sprites/Z") as Texture2D;
 			break;
+		case 'a':
+			texture = Resources.Load("Sprites/A") as Texture2D;
+			break;
+		case 'b':
+			texture = Resources.Load("Sprites/B") as Texture2D;
+			break;
+		case 'c':
+			texture = Resources.Load("Sprites/C") as Texture2D;
+			break;
+		case 'd':
+			texture = Resources.Load("Sprites/D") as Texture2D;
+			break;
+		case 'e':
+			texture = Resources.Load("Sprites/E") as Texture2D;
+			break;
+		case 'f':
+			texture = Resources.Load("Sprites/F") as Texture2D;
+			break;
+		case 'g':
+			texture = Resources.Load("Sprites/G") as Texture2D;
+			break;
+		case 'h':
+			texture = Resources.Load("Sprites/H") as Texture2D;
+			break;
+		case 'i':
+			texture = Resources.Load("Sprites/I") as Texture2D;
+			break;
+		case 'j':
+			texture = Resources.Load("Sprites/J") as Texture2D;
+			break;
+		case 'k':
+			texture = Resources.Load("Sprites/K") as Texture2D;
+			break;
+		case 'l':
+			texture = Resources.Load("Sprites/L") as Texture2D;
+			break;
+		case 'm':
+			texture = Resources.Load("Sprites/M") as Texture2D;
+			break;
+		case 'n':
+			texture = Resources.Load("Sprites/N") as Texture2D;
+			break;
+		case 'o':
+			texture = Resources.Load("Sprites/O") as Texture2D;
+			break;
+		case 'p':
+			texture = Resources.Load("Sprites/P") as Texture2D;
+			break;
+		case 'q':
+			texture = Resources.Load("Sprites/Q") as Texture2D;
+			break;
+		case 'r':
+			texture = Resources.Load("Sprites/R") as Texture2D;
+			break;
+		case 's':
+			texture = Resources.Load("Sprites/S") as Texture2D;
+			break;
+		case 't':
+			texture = Resources.Load("Sprites/T") as Texture2D;
+			break;
+		case 'u':
+			texture = Resources.Load("Sprites/U") as Texture2D;
+			break;
+		case 'v':
+			texture = Resources.Load("Sprites/V") as Texture2D;
+			break;
+		case 'w':
+			texture = Resources.Load("Sprites/W") as Texture2D;
+			break;
+		case 'x':
+			texture = Resources.Load("Sprites/X") as Texture2D;
+			break;
+		case 'y':
+			texture = Resources.Load("Sprites/Y") as Texture2D;
+			break;
+		case 'z':
+			texture = Resources.Load("Sprites/Z") as Texture2D;
+			break;
 		}
 		return texture;
 	}

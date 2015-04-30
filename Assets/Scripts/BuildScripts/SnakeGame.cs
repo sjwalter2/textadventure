@@ -13,24 +13,24 @@ public class SnakeGame : MonoBehaviour
 	public int gameScore = 0;
 	public int gameLives = 3;
 	public int scoreMultiplier = 100;
+
 	// ---------------------------------------------------------------------------------------------------
-	// constructor field: Instance
+	// Instance()
 	// ---------------------------------------------------------------------------------------------------
 	// Creates an instance of ScreenField if one does not exists
 	// ---------------------------------------------------------------------------------------------------
-	public static SnakeGame Instance
+	public static SnakeGame Instance()
 	{
-		get
+		if (instance == null)
 		{
-			if (instance == null)
-			{
-				instance = new GameObject("SnakeGame").AddComponent<SnakeGame>();
-			}
-			return instance;
+			instance = new GameObject("SnakeGame").AddComponent<SnakeGame>();
 		}
+		return instance;
+	
 	}
+
 	// ---------------------------------------------------------------------------------------------------
-	// Unity method: OnApplicationQuit()
+	// OnApplicationQuit()
 	// ---------------------------------------------------------------------------------------------------
 	// Called when you quit the application or stop the editor player
 	// ---------------------------------------------------------------------------------------------------
@@ -38,15 +38,22 @@ public class SnakeGame : MonoBehaviour
 	{
 		DestroyInstance();
 	}
+
+	// ---------------------------------------------------------------------------------------------------
+	// GetSpellingWord()
+	// ---------------------------------------------------------------------------------------------------
+	// 
+	// ---------------------------------------------------------------------------------------------------
+	public string GetSpellingWord()
+	{
+		return spellingWord;
+	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// DestroyInstance()
 	// ---------------------------------------------------------------------------------------------------
 	// Destroys the ScreenField instance
 	// ---------------------------------------------------------------------------------------------------
-	public string getSpellingWord()
-	{
-		return spellingWord;
-	}
 	public void DestroyInstance()
 	{
 		print("Snake Game Instance destroyed");
@@ -78,6 +85,19 @@ public class SnakeGame : MonoBehaviour
 		gameLives = Mathf.Clamp(gameLives, 0, 3);
 		// update our display
 		displayLives.text = "Lives: " + gameLives.ToString();
+
+		// check for playable lives left
+		if (gameLives == 0)
+		{
+			// reload the level, resetting the game
+			Application.LoadLevel("scene");
+		}
+		else
+		{
+			// here we handle resetting the snake after a collision
+			Snake.Instance.Initialize();
+			Snake.Instance.lastDirectionIndicated = Snake.Direction.LEFT;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------------
