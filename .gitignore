@@ -15,4 +15,4 @@ Build/*
 *.userprefs
 
 #ignore files in the root directory
-*.*
+/*.*

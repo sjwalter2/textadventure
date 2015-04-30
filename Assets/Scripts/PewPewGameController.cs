@@ -201,9 +201,9 @@ public class PewPewGameController : MonoBehaviour {
 		//GameObject player = GameObject.FindGameObjectWithTag ("Player");
 
 		if (sz == 1) {
-			Vector3 newPosl = new Vector3((float)-7.5, le.transform.position.y, le.transform.position.z);
+			Vector3 newPosl = new Vector3((float)-11.25, le.transform.position.y, le.transform.position.z);
 			le.transform.position = newPosl;
-			Vector3 newPosr = new Vector3((float)7.5, re.transform.position.y, re.transform.position.z);
+			Vector3 newPosr = new Vector3((float)11.25, re.transform.position.y, re.transform.position.z);
 			re.transform.position = newPosr;
 
 			bound.transform.localScale =  new Vector3((float)15, bound.transform.localScale.y, bound.transform.localScale.z);
@@ -214,9 +214,9 @@ public class PewPewGameController : MonoBehaviour {
 			// le.transform.position.Set ((float)-7.5, le.transform.position.y, le.transform.position.z);
 			// re.transform.position.Set ((float)7.5, re.transform.position.y, re.transform.position.z);
 		} else if (sz == 2) {
-			Vector3 newPosl = new Vector3((float)-11.25, le.transform.position.y, le.transform.position.z);
+			Vector3 newPosl = new Vector3((float)-15, le.transform.position.y, le.transform.position.z);
 			le.transform.position = newPosl;
-			Vector3 newPosr = new Vector3((float)11.25, re.transform.position.y, re.transform.position.z);
+			Vector3 newPosr = new Vector3((float)15, re.transform.position.y, re.transform.position.z);
 			re.transform.position = newPosr;
 
 			bound.transform.localScale =  new Vector3((float)22.5, bound.transform.localScale.y, bound.transform.localScale.z);
@@ -229,9 +229,9 @@ public class PewPewGameController : MonoBehaviour {
 			// le.transform.position.Set ((float)-15, le.transform.position.y, le.transform.position.z);
 			// re.transform.position.Set ((float)15, re.transform.position.y, re.transform.position.z);
 		} else if (sz == 3) {
-			Vector3 newPosl = new Vector3((float)-15, le.transform.position.y, le.transform.position.z);
+			Vector3 newPosl = new Vector3((float)-18.75, le.transform.position.y, le.transform.position.z);
 			le.transform.position = newPosl;
-			Vector3 newPosr = new Vector3((float)15, re.transform.position.y, re.transform.position.z);
+			Vector3 newPosr = new Vector3((float)18.75, re.transform.position.y, re.transform.position.z);
 			re.transform.position = newPosr;
 
 			bound.transform.localScale =  new Vector3((float)30, bound.transform.localScale.y, bound.transform.localScale.z);
