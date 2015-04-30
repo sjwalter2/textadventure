@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca82c6bd39eec954f8e74abc4dce8684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelName: Main
+  levelName: MainWorkingAsteroid
 --- !u!1 &330077192
 GameObject:
   m_ObjectHideFlags: 0

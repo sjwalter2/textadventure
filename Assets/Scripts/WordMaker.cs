@@ -40,6 +40,10 @@ public class WordMaker : MonoBehaviour {
 		}
 	}
 
+	public void restart(){
+		index = 0;
+	}
+
 	public bool hasNextWord(){
 		if (index >= end) {
 			return false;
