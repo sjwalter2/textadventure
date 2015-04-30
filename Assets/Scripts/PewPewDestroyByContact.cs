@@ -5,8 +5,10 @@ public class PewPewDestroyByContact : MonoBehaviour {
 
 	public GameObject explosion;
 	public GameObject playerExplosion;
+	public GameObject bogeyExplosion;
 	private PewPewGameController gc;
 	private PewPewEventManager em;
+
 	// Use this for initialization
 	void Start () {
 		GameObject gco = GameObject.FindWithTag ("GameController");
@@ -22,13 +24,19 @@ public class PewPewDestroyByContact : MonoBehaviour {
 	void OnTriggerEnter (Collider other) {
 		if (other.tag != "Boundary") {
 
-			if(other.tag == "Player") {
+			if (other.tag == "Player") {
 				Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 				gc.endgame();
 			} 
-			Instantiate (explosion, transform.position, transform.rotation);
+			if (tag == "texteroid") {
+				Instantiate (explosion, transform.position, transform.rotation);
+			} else if (tag == "bogey") {
+				Instantiate (bogeyExplosion, transform.position, transform.rotation);
+			}
+			Debug.Log ("audio played");
 			Destroy (other.gameObject);
 			Destroy (gameObject);
+
 			GameObject g = GameObject.FindGameObjectsWithTag ("score")[0];
 			PewPewScoreScript s = g.GetComponent<PewPewScoreScript>();
 			s.score = s.score + 10;

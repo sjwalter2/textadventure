@@ -66,7 +66,7 @@ public class PewPewTexteroidMover : MonoBehaviour {
 	}
 
 	void UpdateVelocity(float speed) {
-		Debug.Log ("vlct is " + velocity);
+		//Debug.Log ("vlct is " + velocity);
 		velocity = transform.up * speed;
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PewPewGameController : MonoBehaviour {
@@ -85,38 +86,19 @@ public class PewPewGameController : MonoBehaviour {
 	IEnumerator SpawnWaves() {
 		yield return new WaitForSeconds(startWait);
 		int currentWord = 0;
-		/*
-		while (myScript.hasNextWord () && !gameover) {
-			int i = 0;
-			while (i < hazardCount && !gameover) {
-				if(!pausegeneration) {
-					if (myScript.hasNextWord ()) {
-						string word = myScript.nextWord ().getWord ();
-						int t = Random.Range(0,2);
-						if (t == 0){
-							spawnWordWithDupes (word);
-						} else {
-							spawnWord (word);
-						}
-					}
-					//currentWord++;
-					i++;
-				} 
-				yield return new WaitForSeconds (spawnWait);
-			}
-			yield return new WaitForSeconds(waveWait);
-		}*/
 
 		while (myScript.hasNextWord () && !gameover) {
 			if(pausegeneration) {
 				yield return new WaitForSeconds(spawnWait);
 			} else {
-				string word = myScript.nextWord ().getWord ();
+				WordPower p = myScript.nextWord ();
+				string word = p.getWord ();
+				string sentiment = p.getType ();
 				int t = Random.Range(0,2);
 				if (t == 0){
-					spawnWordWithDupes (word);
+					spawnWordWithDupes (word, sentiment);
 				} else {
-					spawnWord (word);
+					spawnWord (word, sentiment);
 				}
 
 				if (word[word.Length-1] == ',' || word[word.Length-1] == '.') {
@@ -127,16 +109,25 @@ public class PewPewGameController : MonoBehaviour {
 			}
 		}
 		Debug.Log ("You Win or Something");
+		GameObject wto = GameObject.FindGameObjectWithTag ("wintext");
+		Debug.Log (wto);
+		Text wt = wto.GetComponent<Text>();
+		if(gameover) {
+			wt.text = "You Lose";
+		} else {
+			wt.text = "You Win";
+		}
 		//GameObject.FindGameObjectWithTag ("menu").SetActive (true);
 		menuon = true;
 	}
 
-	public void spawnWord(string word) {
+	public void spawnWord(string word, string sentiment) {
 		Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
 		Debug.Log (thingy.GetType ());
-		thingy.GetComponent<TextMesh> ().text = word;
+		TextMesh tm = thingy.GetComponent<TextMesh> ();
+		tm.text = word;
 		
 		var a = thingy.collider.bounds;
 		var b = thingy.renderer.bounds;
@@ -145,15 +136,23 @@ public class PewPewGameController : MonoBehaviour {
 		
 		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
+
+		if (sentiment == "good") {
+			tm.color = Color.green;
+		} else if (sentiment == "bad") {
+			tm.color = Color.red;
+		} else if (sentiment == "neutral") {
+		}
 	}
 
-	public void spawnWordWithDupes(string word) {
+	public void spawnWordWithDupes(string word, string sentiment) {
 		float xpos = Random.Range (-spawnValues.x, spawnValues.x);
 		Vector3 spawnPosition = new Vector3 (xpos, spawnValues.y, spawnValues.z);
 		Quaternion spawnRotation = Quaternion.identity;
 		GameObject thingy = (GameObject)Instantiate (hazard, spawnPosition, spawnRotation);
 		Debug.Log (thingy.GetType ());
-		thingy.GetComponent<TextMesh> ().text = word;
+		TextMesh tm = thingy.GetComponent<TextMesh> ();
+		tm.text = word;
 		
 		var a = thingy.collider.bounds;
 		var b = thingy.renderer.bounds;
@@ -162,6 +161,13 @@ public class PewPewGameController : MonoBehaviour {
 
 		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
+
+		if (sentiment == "good") {
+			tm.color = Color.green;
+		} else if (sentiment == "bad") {
+			tm.color = Color.red;
+		} else if (sentiment == "neutral") {
+		}
 
 		Vector3 rDupePosn = new Vector3 (xpos + b.extents.x + 1, spawnValues.y, spawnValues.z - 2);
 		Quaternion rDupeRotn = Quaternion.identity;
@@ -268,5 +274,9 @@ public class PewPewGameController : MonoBehaviour {
 			PewPewBoltMover b = g.GetComponent<PewPewBoltMover>();
 			b.dxn = "down";
 		}
+	}
+
+	public void goToMain() {
+		Application.LoadLevel ("Menu");
 	}
 }

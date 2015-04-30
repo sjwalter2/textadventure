@@ -19,7 +19,7 @@ public class PewPewEventManager : MonoBehaviour {
 	}
 
 	public void boom (float speed) {
-		Debug.Log ("in boom the speed is " + speed);
+		//Debug.Log ("in boom the speed is " + speed);
 		if(onDestroy != null) {
 			onDestroy(speed);
 		}
