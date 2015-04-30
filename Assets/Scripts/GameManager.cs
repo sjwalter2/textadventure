@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 	void Start ()
 	{
 		// build our SnakeGame object
-		SnakeGame.Instance.Initialize();
+		SnakeGame.Instance().Initialize();
 
 		// build our Food object
 		Food.Instance.Initialize();

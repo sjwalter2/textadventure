@@ -18,7 +18,7 @@ public class Food : MonoBehaviour {
 	private AudioClip foodPickup;
 	
 	// ---------------------------------------------------------------------------------------------------
-	// constructor field: Instance
+	// Instance()
 	// ---------------------------------------------------------------------------------------------------
 	// Creates an instance of Food if one does not exists
 	// ---------------------------------------------------------------------------------------------------
@@ -33,6 +33,7 @@ public class Food : MonoBehaviour {
 			return instance;
 		}
 	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// Unity method: OnApplicationQuit()
 	// ---------------------------------------------------------------------------------------------------
@@ -42,6 +43,12 @@ public class Food : MonoBehaviour {
 	{
 		DestroyInstance();
 	}
+
+	// ---------------------------------------------------------------------------------------------------
+	// RemoveLetter()
+	// ---------------------------------------------------------------------------------------------------
+	// 
+	// ---------------------------------------------------------------------------------------------------
 	public void RemoveLetter(int i)
 	{
 		foodPos.RemoveAt(i);
@@ -53,6 +60,7 @@ public class Food : MonoBehaviour {
 			gameInstance.UpdateWord();
 		}
 	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// DestroyInstance()
 	// ---------------------------------------------------------------------------------------------------
@@ -63,6 +71,7 @@ public class Food : MonoBehaviour {
 		print("Food Instance destroyed");
 		instance = null;
 	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// UpdateFood()
 	// --------------------------------------------------------------------------------------------------- 
@@ -89,6 +98,7 @@ public class Food : MonoBehaviour {
 		print("Food updated");
 		// initialize pixelInset random positions
 	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// OnGUI()
 	// ---------------------------------------------------------------------------------------------------
@@ -106,6 +116,7 @@ public class Food : MonoBehaviour {
 			}
 		}
 	}
+
 	// ---------------------------------------------------------------------------------------------------
 	// Initialize()
 	// ---------------------------------------------------------------------------------------------------
@@ -114,7 +125,7 @@ public class Food : MonoBehaviour {
 	public void Initialize()
 	{
 		print("Food initialized");
-		gameInstance = SnakeGame.Instance;
+		gameInstance = SnakeGame.Instance();
 		// add our AudioSource component
 		if (!gameObject.GetComponent<AudioSource>())
 		{
@@ -132,9 +143,4 @@ public class Food : MonoBehaviour {
 		transform.rotation = Quaternion.identity;
 		transform.localScale = Vector3.one;
 	}
-//
-//	public void updateFoodTexture()
-//	{
-//		foodTexture = TextureHelper;
-//	}
 }
