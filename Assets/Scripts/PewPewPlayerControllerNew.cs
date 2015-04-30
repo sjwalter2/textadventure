@@ -10,20 +10,30 @@ public class PewPewPlayerControllerNew : MonoBehaviour {
 	public GameObject shot;
 	public Transform shotSpawn;
 	public float fireRate;
+	private bool paused;
 	
 	private float nextFire;
-
 	public string dxn;
+	//private PewPewEventManager em;
+	
+	void OnEnable () {
+		PewPewEventManager.onPause += pause;
+	}
+	
+	void OnDisable () {
+		PewPewEventManager.onPause -= pause;
+	}
 	
 	// Use this for initialization
 	void Start () {
 		dxn = "up";
-		
+		paused = false;
+		//em = GameObject.FindGameObjectWithTag("GameController").GetComponent<PewPewEventManager>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButton ("Fire1") && Time.time > nextFire) {
+		if (Input.GetButton ("Fire1") && Time.time > nextFire && !paused) {
 			Debug.Log ("firing");
 			nextFire = Time.time + fireRate;
 			GameObject clone = Instantiate (shot, shotSpawn.position, shotSpawn.rotation) as GameObject;
@@ -45,6 +55,10 @@ public class PewPewPlayerControllerNew : MonoBehaviour {
 		} else if (dxn == "down") {
 			rigidbody.rotation = Quaternion.Euler (0f, 180f, rigidbody.velocity.x * -tilt);
 		}
+	}
+
+	void pause() {
+		paused = !paused;
 	}
 }
 

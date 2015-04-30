@@ -27,6 +27,9 @@ public class PewPewGameController : MonoBehaviour {
 
 	private PewPewEventManager em;
 
+	void Init() {
+	}
+
 	// Use this for initialization
 	void Start () {
 		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
@@ -34,11 +37,12 @@ public class PewPewGameController : MonoBehaviour {
 		StartCoroutine (SpawnWaves ());
 		gameover = false;
 		restart = false;
-
 		menuvar = GameObject.FindGameObjectWithTag ("menu");
+		Debug.Log ("menuvar is " + menuvar);
 		menuon = false;
 		pausegeneration = false;
 		em = this.GetComponent <PewPewEventManager> ();
+		Debug.Log (em);
 	}
 	
 	// Update is called once per frame
@@ -47,7 +51,9 @@ public class PewPewGameController : MonoBehaviour {
 		if (menuon) {
 			menuvar.SetActive (true);
 		} else {
-			menuvar.SetActive (false);
+			if(menuvar.active) {
+				menuvar.SetActive (false);
+			}
 		}
 
 		if (gameover && restart) {
@@ -66,14 +72,18 @@ public class PewPewGameController : MonoBehaviour {
 	void OnGUI () {
 		Event e = Event.current;
 		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape) {
-			em.pause();
+			toggleMenu();
 		}
+	}
+
+	public void toggleMenu () {
+		em.pause ();
+		menuon = !menuon;
+		Debug.Log ("menu event");
 	}
 
 	void pause() {
 		pausegeneration = !pausegeneration;
-		menuon = !menuon;
-		Debug.Log ("menu event");
 	}
 
 	IEnumerator SpawnWaves() {
@@ -106,7 +116,7 @@ public class PewPewGameController : MonoBehaviour {
 		Debug.Log (wto);
 		Text wt = wto.GetComponent<Text>();
 		if(gameover) {
-			wt.text = "You Lose";
+			wt.text = "You Died";
 		} else {
 			wt.text = "You Win";
 		}
@@ -282,7 +292,7 @@ public class PewPewGameController : MonoBehaviour {
 		//bolt and texteroid dxn
 		GameObject[] gg = GameObject.FindGameObjectsWithTag ("texteroid");
 		foreach (GameObject g in gg) {
-			PewPewBoltMover b = g.GetComponent<PewPewBoltMover>();
+			PewPewTexteroidMover b = g.GetComponent<PewPewTexteroidMover>();
 			b.dxn = "down";
 		}
 	}
@@ -290,4 +300,10 @@ public class PewPewGameController : MonoBehaviour {
 	public void goToMain() {
 		Application.LoadLevel ("Menu");
 	}
+
+	public void setSensitivity(float linearSensitivity) {
+		Debug.Log ("setting sensitivity to " + linearSensitivity);
+		p.speed = linearSensitivity * linearSensitivity;
+	}
+
 }
