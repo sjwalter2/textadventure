@@ -13,6 +13,7 @@ public class SnakeGame : MonoBehaviour
 	public int gameScore = 0;
 	public int gameLives = 3;
 	public int scoreMultiplier = 100;
+	WordMaker myScript;
 
 	// ---------------------------------------------------------------------------------------------------
 	// Instance()
@@ -107,9 +108,12 @@ public class SnakeGame : MonoBehaviour
 	// ---------------------------------------------------------------------------------------------------
 	public void UpdateWord()
 	{
-		spellingWord = "FOOD";
+		if (!myScript.hasNextWord ()) {
+			myScript.restart ();
+		}
+		spellingWord = myScript.nextWord ().getWord ();
 		wordToSpell.text = spellingWord;
-		Food.Instance.UpdateFood(spellingWord);
+		Food.Instance.UpdateFood (spellingWord);
 	}
 
 	// ---------------------------------------------------------------------------------------------------
@@ -120,6 +124,7 @@ public class SnakeGame : MonoBehaviour
 	public void Initialize()
 	{
 		print("SnakeGame initialized");
+		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
 		// initialize transform information
 		transform.position = Vector3.zero;
 		transform.rotation = Quaternion.identity;
@@ -129,18 +134,19 @@ public class SnakeGame : MonoBehaviour
 		gameLives = 3; // 3 lives to start with
 		scoreMultiplier = 100; // adjusts score display
 		// setup our snake game border background
-		GUIHelper.CreateGUITexture(new Rect(0,0,1024,768), Color.grey, "ScreenBorder", 0);
+		GUIHelper.CreateGUITexture(new Rect(10,40,1015,660), Color.grey, "ScreenBorder", 0);
 		// setup our snake game playing field
-		GUIHelper.CreateGUITexture(new Rect(22,84,980,600), Color.black, "ScreenField", 1);
+		GUIHelper.CreateGUITexture(new Rect(20, 50, 1000, 600),
+		                           Color.black, "ScreenField", 1);
 		// create and initialize our score GUIText
-		displayScore = GUIHelper.CreateGetGUIText(new Vector2(10,758), "Game Score", "Score", 1);
+		displayScore = GUIHelper.CreateGetGUIText(new Vector2(10,700), "Game Score", "Score", 1);
 		// update our integer score and display score
 		UpdateScore(0);
 		// create and initialize our lives GUIText
-		displayLives = GUIHelper.CreateGetGUIText(new Vector2(944,758), "Game Lives", "Lives", 1);
+		displayLives = GUIHelper.CreateGetGUIText(new Vector2(944,700), "Game Lives", "Lives", 1);
 		// update our integer lives and display lives
 		UpdateLives(0);
-		wordToSpell = GUIHelper.CreateGetGUIText(new Vector2(100, 758), "Word To Spell", spellingWord, 1);
+		wordToSpell = GUIHelper.CreateGetGUIText(new Vector2(100, 700), "Word To Spell", spellingWord, 1);
 		// update our word to spell
 		UpdateWord();
 	}
