@@ -14,11 +14,5 @@ public class ChrisDone_DestroyByContact : MonoBehaviour
 
 			ChrisPlayerController.count = -1;
 		}
-		if(tag == "GameController");
-		ChrisGameController.Starter = false;
-	}
-	void OnTriggerExit (Collider other){
-		if(tag == "GameController");
-		ChrisGameController.Starter = true;
 	}
 }

@@ -9,18 +9,19 @@ public class ChrisGameController : MonoBehaviour
 	public float spawnWait;
 	public float startWait;
 	public float waveWait;
-	static public bool Starter;
+	static public bool Starter = true;
 	public TextMesh FlashText;
-	public string enemy = "In Xanadu dskdfsfjk did khubilai khan a stately pleasure dome decree, where Alph, the sacred river ran " +
-		"through caverns measureless to man down adfsujio asdfsdfdsq to a sunless sea";	
-	private string[] enemies;
+	public string enemy3 = "1 22 333 4444 55555 666666 7777777 88888888 999999999 a bb ccc Dddd eeeee fffFf gggggg hhhhhhh";	
+	private string[] enemies2;
 	public TextMesh words;
 	public GameObject player;
 	public float variation;
-	
+	public  TextMesh textmesh;
+	public WordMaker myScript;
 	void Start ()
 	{
-		enemies = enemy.Split();
+		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
+		enemies2 = enemy3.Split();
 		StartCoroutine (SpawnWaves ());
 	}
 	
@@ -29,7 +30,7 @@ public class ChrisGameController : MonoBehaviour
 		yield return new WaitForSeconds (startWait);
 		int x = 0;
 		int currentWord = 0;
-		int max = enemies.GetLength (0);
+		int max = enemies2.GetLength (0);
 		while (true)
 		{
 			x++;
@@ -43,19 +44,29 @@ public class ChrisGameController : MonoBehaviour
 				Vector3 spawnPosition = new Vector3 (spawnValues.x, spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
-				hazard.GetComponentInChildren<TextMesh> ().text = enemies[currentWord]; 
+				WordPower aWord = myScript.nextWord();
+				hazard.GetComponentInChildren<TextMesh> ().text = aWord.getWord();
 				hazard.GetComponentInChildren<BoxCollider> ().size = hazard.GetComponentInChildren<MeshRenderer>().bounds.size;
-				hazard.GetComponentInChildren<BoxCollider> ().center = Vector3.zero;
+				hazard.GetComponentInChildren<BoxCollider> ().center = new Vector3(0 - hazard.GetComponentInChildren<MeshRenderer>().bounds.size.x, 0, 0);
 
-				FlashText.GetComponent<TextMesh>().text = enemies[currentWord];
+				FlashText.GetComponent<TextMesh>().text = aWord.getWord();;
 				FlashText.GetComponent<Transform>().position = player.GetComponent<Transform>().position;
-				while (Starter == false){
-					yield return new WaitForSeconds(0);
+
+				hazard.GetComponentInChildren<TextMesh> ().color = Color.white;
+				FlashText.GetComponentInChildren<TextMesh> ().color = Color.white;
+				foreach (char c in aWord.getWord()){
+					if (char.IsUpper(c)) {
+						hazard.GetComponentInChildren<TextMesh> ().color = Color.magenta;
+						FlashText.GetComponentInChildren<TextMesh> ().color = Color.magenta;
+					}
 				}
+
+				float textX = hazard.GetComponentInChildren<MeshRenderer>().bounds.size.x;
+				float timeWait = ((textX/(ChrisPlayerController.gameSpeed*1.67f))+(.3f/(ChrisPlayerController.gameSpeed*1.67f)));
+				yield return new WaitForSeconds(timeWait);
 				currentWord++;
-				Starter = false;
-				if (currentWord >= max - 1){
-					currentWord = 0;
+				if (!myScript.hasNextWord()){
+					myScript.restart ();
 				}
 			}
 		}
