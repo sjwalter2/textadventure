@@ -95,9 +95,9 @@ GameObject:
   - 4: {fileID: 400012}
   - 198: {fileID: 19800012}
   - 199: {fileID: 19900012}
-  - 82: {fileID: 8289554}
+  - 82: {fileID: 8278788}
   m_Layer: 0
-  m_Name: explosion_enemy
+  m_Name: explosion_bogey
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,7 +180,7 @@ Transform:
   - {fileID: 400000}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!82 &8289554
+--- !u!82 &8278788
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -188,7 +188,7 @@ AudioSource:
   m_GameObject: {fileID: 100012}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 3dc7455402dfa462b89a4bbd513955e9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b4824ac21df67a846b6da8dcb4ff6ae1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

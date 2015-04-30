@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PewPewGameController : MonoBehaviour {
@@ -108,6 +109,14 @@ public class PewPewGameController : MonoBehaviour {
 			}
 		}
 		Debug.Log ("You Win or Something");
+		GameObject wto = GameObject.FindGameObjectWithTag ("wintext");
+		Debug.Log (wto);
+		Text wt = wto.GetComponent<Text>();
+		if(gameover) {
+			wt.text = "You Lose";
+		} else {
+			wt.text = "You Win";
+		}
 		//GameObject.FindGameObjectWithTag ("menu").SetActive (true);
 		menuon = true;
 	}
@@ -265,5 +274,9 @@ public class PewPewGameController : MonoBehaviour {
 			PewPewBoltMover b = g.GetComponent<PewPewBoltMover>();
 			b.dxn = "down";
 		}
+	}
+
+	public void goToMain() {
+		Application.LoadLevel ("Menu");
 	}
 }
