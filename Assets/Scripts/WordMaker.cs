@@ -14,6 +14,9 @@ public class WordMaker : MonoBehaviour {
 	string[] fakelist;
 
 	void Start(){
+		GameObject[] others = GameObject.FindGameObjectsWithTag ("onlyone");
+		if (others.Length > 1)
+			Destroy (others[others.Length - 2]);
 		DontDestroyOnLoad (MachineText);
 		Reader = new reader ();
 		string s = "Gablrdarbl yelth lorem xXjxidF bbbzrrrttt kamblum vartlesnort xmek imjlxorp hantlok pharpl nonzhalant mesthlopotamia beepbeep oopboop garmophobia popuklumph pnjul rerejbo zoincn plheu qqeipz ppdliz dnfagu l9djp #$S$*GB 14482 1337 Y&#*K ELLO CRLF ((#))%%";
