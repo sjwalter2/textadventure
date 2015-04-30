@@ -6,6 +6,7 @@ public class PewPewDestroyByContact : MonoBehaviour {
 	public GameObject explosion;
 	public GameObject playerExplosion;
 	public GameObject bogeyExplosion;
+	public string sentiment;
 	private PewPewGameController gc;
 	private PewPewEventManager em;
 
@@ -37,17 +38,31 @@ public class PewPewDestroyByContact : MonoBehaviour {
 			Destroy (other.gameObject);
 			Destroy (gameObject);
 
-			GameObject g = GameObject.FindGameObjectsWithTag ("score")[0];
-			PewPewScoreScript s = g.GetComponent<PewPewScoreScript>();
-			s.score = s.score + 10;
+//			GameObject g = GameObject.FindGameObjectsWithTag ("score")[0];
+//			PewPewScoreScript s = g.GetComponent<PewPewScoreScript>();
+//			s.score = s.score + 10;
+
+			Debug.Log("sentiment is " + sentiment);
+
+			int sentimentSpeedModifier = 1;
+			if (sentiment == "good") {
+				em.ding (100);
+				sentimentSpeedModifier = 10;
+			} else if (sentiment == "bad") {
+				em.ding (5);
+				sentimentSpeedModifier = -10;
+			} else {
+				em.ding(10);
+			}
 
 			float speed = gc.texteroidSpeed;
 
 			if(this.tag == "texteroid") {
-				speed = Mathf.Clamp (gc.texteroidSpeed + (float).1, (float)2.5, (float)10);
+				speed = Mathf.Clamp (gc.texteroidSpeed + (float).1*sentimentSpeedModifier, (float)2.5, (float)10);
 			} else if (this.tag == "bogey") {
-				speed = Mathf.Clamp (gc.texteroidSpeed - (float).5, (float)2.5, (float)10);
+				speed = Mathf.Clamp (gc.texteroidSpeed - (float).5*sentimentSpeedModifier, (float)2.5, (float)10);
 			}
+			//Debug.Log (speed);
 			gc.texteroidSpeed = speed;
 			em.boom (speed);
 		} else {

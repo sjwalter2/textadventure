@@ -25,6 +25,8 @@ public class PewPewGameController : MonoBehaviour {
 
 	public WordMaker myScript;
 
+	private PewPewEventManager em;
+
 	// Use this for initialization
 	void Start () {
 		myScript = GameObject.Find ("MachineText").GetComponent <WordMaker>();
@@ -36,6 +38,7 @@ public class PewPewGameController : MonoBehaviour {
 		menuvar = GameObject.FindGameObjectWithTag ("menu");
 		menuon = false;
 		pausegeneration = false;
+		em = this.GetComponent <PewPewEventManager> ();
 	}
 	
 	// Update is called once per frame
@@ -52,35 +55,25 @@ public class PewPewGameController : MonoBehaviour {
 		}	
 	}
 
+	void OnEnable () {
+		PewPewEventManager.onPause += pause;
+	}
+	
+	void OnDisable () {
+		PewPewEventManager.onPause -= pause;
+	}
+
 	void OnGUI () {
 		Event e = Event.current;
 		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape) {
-			pause();
-			menuon = !menuon;
-			Debug.Log ("menu event");
+			em.pause();
 		}
 	}
 
 	void pause() {
-		GameObject[] gg = GameObject.FindGameObjectsWithTag ("texteroid");
-		foreach (GameObject g in gg) {
-			PewPewTexteroidMover b = g.GetComponent<PewPewTexteroidMover>();
-			b.paused = !b.paused;
-		}
-
-		GameObject[] gb = GameObject.FindGameObjectsWithTag ("bogey");
-		foreach (GameObject b in gb) {
-			PewPewTexteroidMover k = b.GetComponent<PewPewTexteroidMover>();
-			k.paused = !k.paused;
-		}
-
-		GameObject[] bolt = GameObject.FindGameObjectsWithTag ("Projectile");
-		foreach (GameObject b in bolt) {
-			PewPewBoltMover bm = b.GetComponent <PewPewBoltMover>();
-			bm.paused = !bm.paused;
-		}
 		pausegeneration = !pausegeneration;
-
+		menuon = !menuon;
+		Debug.Log ("menu event");
 	}
 
 	IEnumerator SpawnWaves() {
@@ -136,6 +129,8 @@ public class PewPewGameController : MonoBehaviour {
 		
 		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
+		PewPewDestroyByContact dbc = thingy.GetComponent<PewPewDestroyByContact> ();
+		dbc.sentiment = sentiment;
 
 		if (sentiment == "good") {
 			tm.color = Color.green;
@@ -161,6 +156,8 @@ public class PewPewGameController : MonoBehaviour {
 
 		PewPewTexteroidMover bt = thingy.GetComponent<PewPewTexteroidMover> ();
 		bt.dxn = "down";
+		PewPewDestroyByContact dbc = thingy.GetComponent<PewPewDestroyByContact> ();
+		dbc.sentiment = sentiment;
 
 		if (sentiment == "good") {
 			tm.color = Color.green;

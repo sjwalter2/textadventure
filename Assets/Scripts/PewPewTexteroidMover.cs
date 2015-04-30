@@ -10,14 +10,16 @@ public class PewPewTexteroidMover : MonoBehaviour {
 
 	void OnEnable () {
 		PewPewEventManager.onDestroy += UpdateVelocity;
+		PewPewEventManager.onPause += pause;
 	}
 
 	void OnDisable () {
 		PewPewEventManager.onDestroy -= UpdateVelocity;
+		PewPewEventManager.onPause -= pause;
 	}
 
 	void Awake () {
-		dxn = "up";
+		//dxn = "down";
 	}
 	// Use this for initialization
 	void Start () {
@@ -28,7 +30,12 @@ public class PewPewTexteroidMover : MonoBehaviour {
 		paused = false;
 		//dxn = "up";
 		velocity = transform.forward * speed;
-		rigidbody.velocity = velocity;
+		if(dxn == "up") {
+			rigidbody.velocity = velocity;
+		} else if (dxn == "down"){
+			rigidbody.velocity = -velocity;
+		}
+
 
 		//must be rotated after instantiation, or its axes will be all wrong and it will start moving _up_
 		if (this.tag != "Projectile") {
@@ -37,9 +44,10 @@ public class PewPewTexteroidMover : MonoBehaviour {
 		//Debug.Log (this.GetType ());
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void pause ()
+	{
+		paused = !paused;
 		if (paused) {
 			rigidbody.velocity = Vector3.zero;
 		} else {
@@ -49,6 +57,19 @@ public class PewPewTexteroidMover : MonoBehaviour {
 				rigidbody.velocity = velocity;
 			}
 		}
+	}
+	
+	// Update is called once per frame
+	void Update () {
+//		if (paused) {
+//			rigidbody.velocity = Vector3.zero;
+//		} else {
+//			if (dxn == "down") {
+//				rigidbody.velocity = -velocity;
+//			} else if (dxn == "up") {
+//				rigidbody.velocity = velocity;
+//			}
+//		}
 	}
 
 	void FixedUpdate () {
@@ -63,10 +84,22 @@ public class PewPewTexteroidMover : MonoBehaviour {
 		} else if (dxn == "up") {
 			dxn = "down";
 		}
+
+		if (dxn == "down") {
+			rigidbody.velocity = -velocity;
+		} else if (dxn == "up") {
+			rigidbody.velocity = velocity;
+		}
 	}
 
 	void UpdateVelocity(float speed) {
-		//Debug.Log ("vlct is " + velocity);
 		velocity = transform.up * speed;
+		//Debug.Log ("vlct is " + velocity);
+
+		if (dxn == "down") {
+			rigidbody.velocity = -velocity;
+		} else if (dxn == "up") {
+			rigidbody.velocity = velocity;
+		}
 	}
 }

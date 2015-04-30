@@ -10,6 +10,14 @@ public class PewPewBoltMover : MonoBehaviour {
 	void Awake () {
 		dxn = "up";
 	}
+
+	void OnEnable () {
+		PewPewEventManager.onPause += pause;
+	}
+	
+	void OnDisable () {
+		PewPewEventManager.onPause -= pause;
+	}
 	// Use this for initialization
 	void Start () {
 		paused = false;
@@ -27,6 +35,33 @@ public class PewPewBoltMover : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+//		if (paused) {
+//			rigidbody.velocity = Vector3.zero;
+//		} else {
+//			if (dxn == "down") {
+//				rigidbody.velocity = -velocity;
+//			} else if (dxn == "up") {
+//				rigidbody.velocity = velocity;
+//			}
+//		}
+	}
+
+	public void swopdxn() {
+		if (dxn == "down") {
+			dxn = "up";
+		} else if (dxn == "up") {
+			dxn = "down";
+		}
+
+		if (dxn == "down") {
+			rigidbody.velocity = -velocity;
+		} else if (dxn == "up") {
+			rigidbody.velocity = velocity;
+		}
+	}
+
+	public void pause() {
+		paused = !paused;
 		if (paused) {
 			rigidbody.velocity = Vector3.zero;
 		} else {
@@ -35,14 +70,6 @@ public class PewPewBoltMover : MonoBehaviour {
 			} else if (dxn == "up") {
 				rigidbody.velocity = velocity;
 			}
-		}
-	}
-
-	public void swopdxn() {
-		if (dxn == "down") {
-			dxn = "up";
-		} else if (dxn == "up") {
-			dxn = "down";
 		}
 	}
 }
