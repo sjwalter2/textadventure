@@ -11,9 +11,13 @@ public class WordMaker : MonoBehaviour {
 	int index;
 	int end;
 
+	string[] fakelist;
+
 	void Start(){
 		DontDestroyOnLoad (MachineText);
 		Reader = new reader ();
+		string s = "Gablrdarbl yelth lorem xXjxidF bbbzrrrttt kamblum vartlesnort xmek imjlxorp hantlok pharpl nonzhalant mesthlopotamia beepbeep oopboop garmophobia popuklumph pnjul rerejbo zoincn plheu qqeipz ppdliz dnfagu l9djp #$S$*GB 14482 1337 Y&#*K ELLO CRLF ((#))%%";
+		fakelist = s.Split (' ');
 	}
 
 	public void read(){
@@ -42,6 +46,11 @@ public class WordMaker : MonoBehaviour {
 
 	public void restart(){
 		index = 0;
+	}
+
+	public string getFakeWord(){
+		int num = (int)Random.Range (0, fakelist.Length);
+		return fakelist[num];
 	}
 
 	public bool hasNextWord(){

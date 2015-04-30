@@ -1,19 +1,31 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 public class Snake : MonoBehaviour
 {
 	// private static instance of class
 	private static Snake instance = null;
 	// private fields
-	private List<Rect> snakePos = new List<Rect>();
+	private List<int> snakePosXIndex = new List<int>();
+	private List<int> snakePosYIndex = new List<int>();
 	private List<Texture2D> snakeIcon = new List<Texture2D>();
-	private int snakeLength = 2;
+	private int snakeLength = 3;
 	private float moveDelay;
 	private AudioClip move1;
 	private AudioClip move2;
 	private AudioClip death;
-	private Direction lastDirectionIndicated = Direction.LEFT;
+	private bool addSquare;
+	private bool canMove = true;
+	public static int[] initXPos = new int[] {22,42,62,82,102,122,142,162,182,202,222,
+		242,262,282,302,322,342,362,382,402,422,
+		442,462,482,502,522,542,562,582,602,622,
+		642,662,682,702,722,742,762,782,802,822,
+		842,862,882,902,922,942,962,982};
+	public static int[] initYPos = new int[] {94,114,134,154,174,194,214,234,254,274,
+		294,314,334,354,374,394,414,434,454,474,
+		494,514,534,554,574,594,614,634,654};
+	public Direction lastDirectionIndicated = Direction.LEFT;
+	
 	// direction enum for clarification
 	public enum Direction
 	{
@@ -22,11 +34,7 @@ public class Snake : MonoBehaviour
 		LEFT,
 		RIGHT
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// constructor field: Instance
-	// ---------------------------------------------------------------------------------------------------
-	// Creates an instance of Snake if one does not exists
-	// ---------------------------------------------------------------------------------------------------
+
 	public static Snake Instance
 	{
 		get
@@ -38,223 +46,158 @@ public class Snake : MonoBehaviour
 			return instance;
 		}
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// Unity method: OnApplicationQuit()
-	// ---------------------------------------------------------------------------------------------------
-	// Called when you quit the application or stop the editor player
-	// ---------------------------------------------------------------------------------------------------
-	public void OnApplicationQuit()
+	
+	void OnApplicationQuit()
 	{
 		DestroyInstance();
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// DestroyInstance()
-	// ---------------------------------------------------------------------------------------------------
-	// Destroys the ScreenField instance
-	// ---------------------------------------------------------------------------------------------------
-	public void DestroyInstance()
+
+	void DestroyInstance()
 	{
 		print("Snake Instance destroyed");
 		instance = null;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// Start()
-	// ---------------------------------------------------------------------------------------------------
-	// Unity MonoBehavior call, runs auto when object is created, used for initialization
-	// ---------------------------------------------------------------------------------------------------
-	void Start ()
+
+	void OnGUI()
 	{
-		// start our SnakeUpdate loop
-		StartCoroutine(UpdateSnake());
-	}
-	// ---------------------------------------------------------------------------------------------------
-	// UpdateSnake()
-	// ---------------------------------------------------------------------------------------------------
-	// Our main player loop, this is what runs the logic for the snake, movement, food, adding segments
-	// ---------------------------------------------------------------------------------------------------
-	IEnumerator UpdateSnake ()
-	{
-		while(true)
+		for (int i = 0; i < snakeLength; i++)
 		{
-			// handle multi key presses
-			if (InputHelper.GetStandardMoveMultiInputKeys())
+			Rect tempPos = new Rect(initXPos[snakePosXIndex[i]], initYPos[snakePosYIndex[i]],
+			                        initXPos[1] - initXPos[0], initYPos[1] - initYPos[0]);
+			GUI.DrawTexture(tempPos, snakeIcon[i]);
+		}
+	}
+
+	void Update()
+	{
+		if (canMove)
+		{
+			UpdateSnake();
+		}
+	}
+	
+	private void UpdateSnake()
+	{
+		if (InputHelper.GetStandardMoveMultiInputKeys())
+		{
+			//Debug.Log ("We are pressing multiple keys for direction");
+			MoveSnake(lastDirectionIndicated);
+		}
+		else
+		{
+			// are we moving up
+			if (InputHelper.GetStandardMoveUpDirection())
 			{
-				Debug.Log ("We are pressing multiple keys for direction");
-				yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
+				if (lastDirectionIndicated != Direction.DOWN)
+				{
+					lastDirectionIndicated = Direction.UP;
+					MoveSnake(Direction.UP);
+				}
+				else
+				{
+					MoveSnake(lastDirectionIndicated);
+				}
 			}
 			else
 			{
-				// are we moving up
-				if (InputHelper.GetStandardMoveUpDirection())
+				// are we moving left
+				if (InputHelper.GetStandardMoveLeftDirection())
 				{
-					if (lastDirectionIndicated != Direction.DOWN)
+					if (lastDirectionIndicated != Direction.RIGHT)
 					{
-						lastDirectionIndicated = Direction.UP;
-						yield return StartCoroutine(MoveSnake(Direction.UP));
-						Debug.Log ("We are moving UP");
+						lastDirectionIndicated = Direction.LEFT;
+						MoveSnake(Direction.LEFT);
 					}
 					else
 					{
-						yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
-						Debug.Log("Continuing Along Path");
+						MoveSnake(lastDirectionIndicated);
 					}
 				}
 				else
 				{
-					// are we moving left
-					if (InputHelper.GetStandardMoveLeftDirection())
+					// are we moving down
+					if (InputHelper.GetStandardMoveDownDirection())
 					{
-						if (lastDirectionIndicated != Direction.RIGHT)
+						if (lastDirectionIndicated != Direction.UP)
 						{
-							lastDirectionIndicated = Direction.LEFT;
-							yield return StartCoroutine(MoveSnake(Direction.LEFT));
-							Debug.Log ("We are moving LEFT");
+							lastDirectionIndicated = Direction.DOWN;
+							MoveSnake(Direction.DOWN);
 						}
 						else
 						{
-							yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
-							Debug.Log("Continuing Along Path");
+							MoveSnake(lastDirectionIndicated);
 						}
 					}
 					else
 					{
-						// are we moving down
-						if (InputHelper.GetStandardMoveDownDirection())
+						if (InputHelper.GetStandardMoveRightDirection())
 						{
-							if (lastDirectionIndicated != Direction.UP)
+							if (lastDirectionIndicated != Direction.LEFT)
 							{
-								lastDirectionIndicated = Direction.DOWN;
-								yield return StartCoroutine(MoveSnake(Direction.DOWN));
-								Debug.Log ("We are moving DOWN");
+								lastDirectionIndicated = Direction.RIGHT;
+								MoveSnake(Direction.RIGHT);
 							}
 							else
 							{
-								yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
-								Debug.Log("Continuing Along Path");
+								MoveSnake(lastDirectionIndicated);
 							}
 						}
 						else
 						{
-							if (InputHelper.GetStandardMoveRightDirection())
-							{
-								if (lastDirectionIndicated != Direction.LEFT)
-								{
-									lastDirectionIndicated = Direction.RIGHT;
-									yield return StartCoroutine(MoveSnake(Direction.RIGHT));
-									Debug.Log ("We are moving RIGHT");
-								}
-								else
-								{
-									yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
-									Debug.Log("Continuing Along Path");
-								}
-							}
-							else
-							{
-								yield return StartCoroutine(MoveSnake(lastDirectionIndicated));
-								Debug.Log("Continuing Along Path");
-							}
+							MoveSnake(lastDirectionIndicated);
 						}
 					}
 				}
 			}
-
-			// here we check for snake collision (it can only collide with itself)
-			if (SnakeCollidedWithSelf() == true)
-			{
-				break;
-			}
-			yield return new WaitForSeconds(moveDelay);
 		}
-		// play our death sound
-		audio.clip = death;
-		audio.Play();
-		// we are hit
-		yield return StartCoroutine(ScreenHelper.FlashScreen(6, 0.1f, new Color(1, 0, 0, 0.5f)));
-		// we reduce number of lives
-		SnakeGame.Instance.UpdateLives(-1);
-		// check for playable lives left
-		if (SnakeGame.Instance.gameLives == 0)
+		// here we check for snake collision with itself
+		if (SnakeCollidedWithSelf() == true)
 		{
-			// reload the level, resetting the game
-			Application.LoadLevel("scene");
+			StartCoroutine(EndGame());
 		}
-		else
-		{
-			// here we handle resetting the snake after a collision
-			Initialize();
-			lastDirectionIndicated = Direction.LEFT;
-			// we have to call Start manually because this object is already Instantiated
-			Start();
-		}
+		StartCoroutine(DelayGame());
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// MoveSnake()
-	// ---------------------------------------------------------------------------------------------------
-	// Moves the snake texture (pixel movement / update snake texture Rect)
-	// ---------------------------------------------------------------------------------------------------
-	public IEnumerator MoveSnake(Direction moveDirection)
+	
+	private IEnumerator EndGame()
+	{
+		canMove = false;
+		yield return new WaitForSeconds(moveDelay);
+		KillSelf();
+		canMove = true;
+	}
+
+
+	private IEnumerator DelayGame()
+	{
+		canMove = false;
+		yield return new WaitForSeconds(moveDelay);
+		canMove = true;
+	}
+
+	public void MoveSnake(Direction moveDirection)
 	{
 		// define a temp List of Rects to our current snakes List of Rects
-		List<Rect> tempRects = new List<Rect>();
-		Rect segmentRect = new Rect(0,0,0,0);
+		List<int> tempXIndices = new List<int>();
+		List<int> tempYIndices = new List<int>();
 		// initialize
-		for (int i = 0; i < snakePos.Count; i++)
+		for (int i = 0; i < snakePosXIndex.Count; i++)
 		{
-			tempRects.Add(snakePos[i]);
+			tempXIndices.Add(snakePosXIndex[i]);
+			tempYIndices.Add(snakePosYIndex[i]);
 		}
-		switch(moveDirection)
+		switch (moveDirection)
 		{
 		case Direction.UP:
-			if (snakePos[0].y > 94)
+			if (CheckForValidUpMove())
 			{
 				// we can move up
-				snakePos[0] = new Rect(snakePos[0].x, snakePos[0].y - 20, snakePos[0].width,
-				                       snakePos[0].height);
+				snakePosYIndex[0] = snakePosYIndex[0] - 1;
 				// now update the rest of our body
-				UpdateMovePosition(tempRects);
+				UpdateMovePosition(tempXIndices, tempYIndices);
 				// check for food
 				if (CheckForFood())
 				{
-					// check for valid build segment position and add a segment
-					// create a temporary check position (this one is below the last segment in snakePos[])
-						segmentRect = CheckForValidDownPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is to the left the last segment in snakePos[])
-						segmentRect = CheckForValidLeftPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is to the right the last segment in snakePos[])
-						segmentRect = CheckForValidRightPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-					}
-					// no need to check Up, because we are pressing the Up key, we do not want a segment above us
+					addSquare = true;
 				}
 				// toggle the audio clip and play
 				audio.clip = (audio.clip == move1) ? move2 : move1;
@@ -262,61 +205,20 @@ public class Snake : MonoBehaviour
 			}
 			else
 			{
-
+				StartCoroutine(EndGame());
 			}
 			break;
 		case Direction.LEFT:
-			if (snakePos[0].x > 22)
+			if (CheckForValidLeftMove())
 			{
 				// we can move left
-				snakePos[0] = new Rect(snakePos[0].x - 20, snakePos[0].y, snakePos[0].width,
-				                       snakePos[0].height);
+				snakePosXIndex[0] = snakePosXIndex[0] - 1;
 				// now update the rest of our body
-				UpdateMovePosition(tempRects);
+				UpdateMovePosition(tempXIndices, tempYIndices);
 				// check for food
 				if (CheckForFood())
 				{
-					// check for valid build segment position and add a segment
-					// create a temporary check position (this one is to the right the last segment in snakePos[])
-						segmentRect = CheckForValidRightPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is above the last segment in snakePos[])
-						segmentRect = CheckForValidUpPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is below the last segment in snakePos[])
-						segmentRect = CheckForValidDownPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// no need to check Left, because we are pressing the Left key, we do not want a segment ahead of us
+					addSquare = true;
 				}
 				// toggle the audio clip and play
 				audio.clip = (audio.clip == move1) ? move2 : move1;
@@ -324,59 +226,20 @@ public class Snake : MonoBehaviour
 			}
 			else
 			{
-
+				StartCoroutine(EndGame());
 			}
 			break;
 		case Direction.DOWN:
-			if (snakePos[0].y < 654)
+			if (CheckForValidDownMove())
 			{
 				// we can move down
-				snakePos[0] = new Rect(snakePos[0].x, snakePos[0].y + 20, snakePos[0].width,
-				                       snakePos[0].height);
+				snakePosYIndex[0] = snakePosYIndex[0] + 1;
 				// now update the rest of our body
-				UpdateMovePosition(tempRects);
+				UpdateMovePosition(tempXIndices, tempYIndices);
 				// check for food
 				if (CheckForFood())
 				{
-					// check for valid build segment position and add a segment
-					// create a temporary check position (this one is above the last segment in snakePos[])
-						segmentRect = CheckForValidUpPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is to the left the last segment in snakePos[])
-						segmentRect = CheckForValidLeftPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is to the right the last segment in snakePos[])
-						segmentRect = CheckForValidRightPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-					}
-					// no need to check Down, because we are pressing the Down key, we do not want a segment below us
+					addSquare = true;
 				}
 				// toggle the audio clip and play
 				audio.clip = (audio.clip == move1) ? move2 : move1;
@@ -384,59 +247,20 @@ public class Snake : MonoBehaviour
 			}
 			else
 			{
-
+				StartCoroutine(EndGame());
 			}
 			break;
 		case Direction.RIGHT:
-			if (snakePos[0].x < 982)
+			if (CheckForValidRightMove())
 			{
 				// we can move right
-				snakePos[0] = new Rect(snakePos[0].x + 20, snakePos[0].y, snakePos[0].width,
-				                       snakePos[0].height);
+				snakePosXIndex[0] = snakePosXIndex[0] + 1;
 				// now update the rest of our body
-				UpdateMovePosition(tempRects);
+				UpdateMovePosition(tempXIndices, tempYIndices);
 				// check for food
 				if (CheckForFood())
 				{
-					// check for valid build segment position and add a segment
-					// create a temporary check position (this one is left of the last segment in snakePos[])
-						segmentRect = CheckForValidLeftPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is to the left the last segment in snakePos[])
-						segmentRect = CheckForValidUpPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-						// give control back to our calling method
-						yield break;
-					}
-					// create a temporary check position (this one is below the last segment in snakePos[])
-						segmentRect = CheckForValidDownPosition();
-					if (segmentRect.x != 0)
-					{
-						// we build another segment passing the Rect as an argument
-						BuildSnakeSegment(segmentRect);
-						// increment our snake length
-						snakeLength++;
-						// decrement our moveDelay
-						//moveDelay = Mathf.Max(0.05f, moveDelay - 0.01f);
-					}
-					// no need to check Right, because we are pressing the Right key, we do not want a segment ahead of us
+					addSquare = true;
 				}
 				// toggle the audio clip and play
 				audio.clip = (audio.clip == move1) ? move2 : move1;
@@ -444,180 +268,155 @@ public class Snake : MonoBehaviour
 			}
 			else
 			{
-
+				StartCoroutine(EndGame());
 			}
 			break;
 		}
-		yield return null;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// UpdateMovePosition()
-	// ---------------------------------------------------------------------------------------------------
-	// Updates the snakePos list of Rect's to the new Rect positions after a move
-	// ---------------------------------------------------------------------------------------------------
-	private void UpdateMovePosition(List<Rect> tmpRects)
+	
+	private void KillSelf()
+	{
+		//Play death sound
+		audio.clip = death;
+		audio.Play();
+		//Flash red
+		StartCoroutine(ScreenHelper.FlashScreen(1, 0.15f, new Color(1, 0, 0, 0.5f)));
+		//Reduce number of lives
+		SnakeGame.Instance().UpdateLives(-1);
+		RespawnSnake();
+	}
+
+	private void UpdateMovePosition(List<int> tmpX, List<int> tmpY)
 	{
 		// update our snakePos Rect with the tmpRect positions
-		for (int i = 0; i < tmpRects.Count - 1; i++)
+		for (int i = 0; i < tmpX.Count - 1; i++)
 		{
 			// exe. size of 3, assign 1,2,3 to 0,1,2 - snakePos[0] is already assigned
-			snakePos[i+1] = tmpRects[i];
+			snakePosXIndex[i + 1] = tmpX[i];
+			snakePosYIndex[i + 1] = tmpY[i];
+		}
+		if (addSquare)
+		{
+			snakeLength++;
+			snakePosXIndex.Add(tmpX[tmpX.Count - 1]);
+			snakePosYIndex.Add(tmpY[tmpY.Count - 1]);
+			BuildSnakeSegment(tmpX[tmpX.Count - 1], tmpY[tmpY.Count - 1]);
+			addSquare = false;
 		}
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// CheckForFood()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the first snake segment is same position as the food on the game field, returns bool
-	// ---------------------------------------------------------------------------------------------------
+	
 	private bool CheckForFood()
 	{
-		if(Food.Instance != null)
+		if (Food.Instance != null)
 		{
 			Rect[] foodRects = Food.Instance.foodPos.ToArray();
 			char[] possibleChars = Food.Instance.letterList.ToArray();
-			for( int i = 0; i < foodRects.Length; i++)
+			Rect tempSnakePos = new Rect(initXPos[snakePosXIndex[0]], initYPos[snakePosYIndex[0]],
+			                             initXPos[1] - initXPos[0], initYPos[1] - initYPos[0]);
+			for (int i = 0; i < foodRects.Length; i++)
 			{
-				if (snakePos[0].Contains(new Vector2(foodRects[i].x,foodRects[i].y)))
+				if (tempSnakePos.Contains(new Vector2(foodRects[i].x, foodRects[i].y)))
 				{
-					Debug.Log ("We hit food");
 					// we re-position the food
-//					Food.Instance.UpdateFood();
-					// we add to our score
-					SnakeGame.Instance.UpdateScore(1);
-					if(possibleChars[i] == possibleChars[0])
+					if (possibleChars[i] == possibleChars[0])
 					{
+						// we add to our score
+						SnakeGame.Instance().UpdateScore(1);
 						Food.Instance.RemoveLetter(i);
+						if( moveDelay != .1f)
+						{
+							moveDelay -= .01f;
+						}
 						return true;
 					}
 					else
 					{
 						return false;
 					}
-							
 				}
 			}
 		}
 		return false;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// CheckForValidDownPosition()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the last snake segment is not in the lowest position on the game field, returns Rect
-	// ---------------------------------------------------------------------------------------------------
-	private Rect CheckForValidDownPosition()
+
+	private bool CheckForValidDownMove()
 	{
-		if (snakePos[snakePos.Count-1].y != 654)
+		if (snakePosYIndex[0] != (initYPos.GetLength(0) - 1))
 		{
-			return new Rect(snakePos[snakePos.Count-1].x, snakePos[snakePos.Count-1].y - 20, 20, 20);
+			return true;
 		}
-		return new Rect(0,0,0,0);
+		return false;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// CheckForValidUpPosition()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the last snake segment is not in the highest position on the game field, returns Rect
-	// ---------------------------------------------------------------------------------------------------
-	private Rect CheckForValidUpPosition()
+
+	private bool CheckForValidUpMove()
 	{
-		if (snakePos[snakePos.Count-1].y != 94)
+		if (snakePosYIndex[0] != 0)
 		{
-			return new Rect(snakePos[snakePos.Count-1].x, snakePos[snakePos.Count-1].y + 20, 20, 20);
+			return true;
 		}
-		return new Rect(0,0,0,0);
+		return false;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// CheckForValidLeftPosition()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the last snake segment is not in the far left position on the game field, returns Rect
-	// ---------------------------------------------------------------------------------------------------
-	private Rect CheckForValidLeftPosition()
+
+	private bool CheckForValidLeftMove()
 	{
-		if (snakePos[snakePos.Count-1].x != 22)
+		if (snakePosXIndex[0] != 0)
 		{
-			return new Rect(snakePos[snakePos.Count-1].x - 20, snakePos[snakePos.Count-1].y, 20, 20);
+			return true;
 		}
-		return new Rect(0,0,0,0);
+		return false;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// CheckForValidRightPosition()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the last snake segment is not in the far right position on the game field, returns Rect
-	// ---------------------------------------------------------------------------------------------------
-	private Rect CheckForValidRightPosition()
+
+	private bool CheckForValidRightMove()
 	{
-		if (snakePos[snakePos.Count-1].x != 982)
+		if (snakePosXIndex[0] != (initXPos.GetLength(0) - 1))
 		{
-			return new Rect(snakePos[snakePos.Count-1].x + 20, snakePos[snakePos.Count-1].y, 20, 20);
+			return true;
 		}
-		return new Rect(0,0,0,0);
+		return false;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// BuildSnakeSegment()
-	// ---------------------------------------------------------------------------------------------------
-	// Adds a snake segment, pass the Rect to apply the position to
-	// ---------------------------------------------------------------------------------------------------
+
 	private void BuildSnakeSegment(Rect rctPos)
 	{
 		// define our snake head and tail texture
 		snakeIcon.Add(TextureHelper.CreateTexture(20, 20, Color.green));
-		// define our snake head and tail GUI Rect
-		snakePos.Add(rctPos);
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// SnakeCollidedWithSelf()
-	// ---------------------------------------------------------------------------------------------------
-	// Checks if the snake has hit any part of its body, returns true/false
-	// ---------------------------------------------------------------------------------------------------
+
+	private void BuildSnakeSegment(int xIndx, int yIndx)
+	{
+		BuildSnakeSegment(new Rect(initXPos[xIndx], initYPos[yIndx], initXPos[1] - initXPos[0], initYPos[1] - initYPos[0]));
+	}
+	
 	private bool SnakeCollidedWithSelf()
 	{
 		bool didCollide = false;
-		if (snakePos.Count <= 4)
+		if (snakePosXIndex.Count <= 4)
 		{
 			return false;
 		}
-		for (int i = 0; i < snakePos.Count; i++)
+		for (int i = 1; i < snakePosXIndex.Count; i++)
 		{
-			if (i > 0)
+			if (snakePosXIndex[0] == snakePosXIndex[snakePosXIndex.Count - i]
+			    && snakePosYIndex[0] == snakePosYIndex[snakePosYIndex.Count - i])
 			{
-				if (snakePos[0].x == snakePos[snakePos.Count - i].x && snakePos[0].y ==
-				    snakePos[snakePos.Count - i].y)
-				{
-					// we have collided
-					didCollide = true;
-					break;
-				}
+				// we have collided
+				didCollide = true;
+				break;
 			}
 		}
 		return didCollide;
 	}
-	// ---------------------------------------------------------------------------------------------------
-	// ResetSnake()
-	// ---------------------------------------------------------------------------------------------------
-	// Handles resetting snake back to original
-	// ---------------------------------------------------------------------------------------------------
-	// handles displaying the Snake
-	void OnGUI()
-	{
-		for (int i = 0; i < snakeLength; i++)
-		{
-			GUI.DrawTexture(snakePos[i], snakeIcon[i]);
-		}
-	}
-	// ---------------------------------------------------------------------------------------------------
-	// Initialize()
-	// ---------------------------------------------------------------------------------------------------
-	// Initializes Snake
-	// ---------------------------------------------------------------------------------------------------
+	
 	public void Initialize()
 	{
-		print("Snake initialized");
+		//print("Snake initialized");
 		// clear our Lists
-		snakePos.Clear();
+		snakePosXIndex.Clear();
+		snakePosYIndex.Clear();
 		snakeIcon.Clear();
 		// initialize our length to start length
-		snakeLength = 2;
+		snakeLength = 3;
 		// intialize our moveDelay
-		moveDelay = 0.05f;
+		moveDelay = 0.15f;
 		// add our AudioSource component
 		if (!gameObject.GetComponent<AudioSource>())
 		{
@@ -631,15 +430,36 @@ public class Snake : MonoBehaviour
 			audio.loop = false;
 			audio.clip = move1;
 		}
+		for (int i = 0; i < 3; i++)
+		{
+			// define our snake head and tail texture
+			snakeIcon.Add(TextureHelper.CreateTexture(20, 20, Color.green));
+			// define our snake head and tail GUI Rect
+			snakePosXIndex.Add(23 + i);
+			snakePosYIndex.Add(14);
+		}
 		// make sure our localScale is correct for a GUItexture
 		transform.position = Vector3.zero;
 		transform.rotation = Quaternion.identity;
 		transform.localScale = Vector3.one;
-		// define our snake head and tail texture
-		snakeIcon.Add(TextureHelper.CreateTexture(20, 20, Color.green));
-		snakeIcon.Add(TextureHelper.CreateTexture(20, 20, Color.green));
-		// define our snake head and tail GUI Rect
-		snakePos.Add(new Rect( 502, 374, 20, 20));
-		snakePos.Add(new Rect( 502 + 20, 374, 20, 20));
+	}
+	
+	private void RespawnSnake()
+	{
+		snakePosXIndex.Clear();
+		snakePosYIndex.Clear();
+		snakeIcon.Clear();
+		// initialize our length to start length
+		snakeLength = 3;
+		// intialize our moveDelay
+		moveDelay = 0.15f;
+		for (int i = 0; i < 3; i++)
+		{
+			// define our snake head and tail texture
+			snakeIcon.Add(TextureHelper.CreateTexture(20, 20, Color.green));
+			// define our snake head and tail GUI Rect
+			snakePosXIndex.Add(23 + i);
+			snakePosYIndex.Add(14);
+		}
 	}
 }
