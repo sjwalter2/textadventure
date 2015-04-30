@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Food : MonoBehaviour {
+public class Food : MonoBehaviour
+{
 	// public fields
 	public List<Rect> foodPos = new List<Rect>();
 	public List<Texture2D> foodTexture = new List<Texture2D>();
@@ -10,10 +11,10 @@ public class Food : MonoBehaviour {
 	private static string spellingWord;
 	private static SnakeGame gameInstance;
 	private static Food instance = null;
-	private static int[] initXPos = new int[] {22,42,62,82,102,122,142,162,182,202,222,242,262,282,302,322,342,362,
+	public static int[] initXPos = new int[] {22,42,62,82,102,122,142,162,182,202,222,242,262,282,302,322,342,362,
 		382,402,422,442,462,482,502,522,542,562,582,602,622,642,662,682,702,
 		722,742,762,782,802,822,842,862,882,902,922,942,962,982};
-	private static int[] initYPos = new int[] {94,114,134,154,174,194,214,234,254,274,294,314,334,354,374,394,414,
+	public static int[] initYPos = new int[] {94,114,134,154,174,194,214,234,254,274,294,314,334,354,374,394,414,
 		434,454,474,494,514,534,554,574,594,614,634,654};
 	private AudioClip foodPickup;
 	

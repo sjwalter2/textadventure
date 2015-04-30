@@ -21,6 +21,10 @@ public class TextureHelper : MonoBehaviour
 		texture.Apply();
 		return texture;
 	}
+	public static Texture2D LoadBackgroundTexture()
+	{
+		return Resources.Load("Sprites/outerSpaceBackground") as Texture2D;
+	}
 	// Create and return an alphabetical texture
 	public static Texture2D CreateLetterTexture(int width, int height, char letter)
 	{
