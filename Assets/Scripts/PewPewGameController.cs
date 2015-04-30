@@ -94,7 +94,7 @@ public class PewPewGameController : MonoBehaviour {
 				WordPower p = myScript.nextWord ();
 				string word = p.getWord ();
 				string sentiment = p.getType ();
-				int t = Random.Range(0,2);
+				int t = Random.Range(0,5);
 				if (t == 0){
 					spawnWordWithDupes (word, sentiment);
 				} else {
@@ -169,17 +169,31 @@ public class PewPewGameController : MonoBehaviour {
 		} else if (sentiment == "neutral") {
 		}
 
-		Vector3 rDupePosn = new Vector3 (xpos + b.extents.x + 1, spawnValues.y, spawnValues.z - 2);
-		Quaternion rDupeRotn = Quaternion.identity;
-		GameObject rDupe = (GameObject)Instantiate (hazard, rDupePosn, rDupeRotn);
-		rDupe.tag = "bogey";
-		rDupe.GetComponent<TextMesh> ().text = getDupe ();
-		rDupe.GetComponent<BoxCollider> ().size = rDupe.renderer.bounds.size;
-		rDupe.GetComponent<BoxCollider> ().center = Vector3.zero;
-		rDupe.transform.position = new Vector3 (rDupe.transform.position.x + rDupe.renderer.bounds.extents.x, rDupe.transform.position.y, rDupe.transform.position.z + 2);
-		
-		PewPewTexteroidMover rDupemv = rDupe.GetComponent<PewPewTexteroidMover> ();
-		rDupemv.dxn = "down";
+		if (Random.Range (0,2) == 0) {
+			Vector3 rDupePosn = new Vector3 (xpos + b.extents.x + 1, spawnValues.y, spawnValues.z - 2);
+			Quaternion rDupeRotn = Quaternion.identity;
+			GameObject rDupe = (GameObject)Instantiate (hazard, rDupePosn, rDupeRotn);
+			rDupe.tag = "bogey";
+			rDupe.GetComponent<TextMesh> ().text = getDupe ();
+			rDupe.GetComponent<BoxCollider> ().size = rDupe.renderer.bounds.size;
+			rDupe.GetComponent<BoxCollider> ().center = Vector3.zero;
+			rDupe.transform.position = new Vector3 (rDupe.transform.position.x + rDupe.renderer.bounds.extents.x, rDupe.transform.position.y, rDupe.transform.position.z + 2);
+			
+			PewPewTexteroidMover rDupemv = rDupe.GetComponent<PewPewTexteroidMover> ();
+			rDupemv.dxn = "down";
+		} else {
+			Vector3 rDupePosn = new Vector3 (xpos - b.extents.x - 1, spawnValues.y, spawnValues.z - 2);
+			Quaternion rDupeRotn = Quaternion.identity;
+			GameObject rDupe = (GameObject)Instantiate (hazard, rDupePosn, rDupeRotn);
+			rDupe.tag = "bogey";
+			rDupe.GetComponent<TextMesh> ().text = getDupe ();
+			rDupe.GetComponent<BoxCollider> ().size = rDupe.renderer.bounds.size;
+			rDupe.GetComponent<BoxCollider> ().center = Vector3.zero;
+			rDupe.transform.position = new Vector3 (rDupe.transform.position.x - rDupe.renderer.bounds.extents.x, rDupe.transform.position.y, rDupe.transform.position.z + 2);
+			
+			PewPewTexteroidMover rDupemv = rDupe.GetComponent<PewPewTexteroidMover> ();
+			rDupemv.dxn = "down";
+		}
 	}
 
 	public string getDupe() {
